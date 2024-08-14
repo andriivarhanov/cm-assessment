@@ -30,9 +30,29 @@ export namespace Components {
          */
         "slug": string;
     }
-    interface CmRichText {
-        "data": TRichText;
+    interface CmCheckboxGroup {
+        "label": string;
+        "name": string;
+        "options": string[];
+        "value": string[];
     }
+    interface CmRadioGroup {
+        "label": string;
+        "name": string;
+        "options": string[];
+        "value": string[];
+    }
+    interface CmRichText {
+        "content": TRichText;
+    }
+}
+export interface CmCheckboxGroupCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLCmCheckboxGroupElement;
+}
+export interface CmRadioGroupCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLCmRadioGroupElement;
 }
 declare global {
     interface HTMLCmAssessmentElement extends Components.CmAssessment, HTMLStencilElement {
@@ -40,6 +60,40 @@ declare global {
     var HTMLCmAssessmentElement: {
         prototype: HTMLCmAssessmentElement;
         new (): HTMLCmAssessmentElement;
+    };
+    interface HTMLCmCheckboxGroupElementEventMap {
+        "valueChange": string[];
+    }
+    interface HTMLCmCheckboxGroupElement extends Components.CmCheckboxGroup, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLCmCheckboxGroupElementEventMap>(type: K, listener: (this: HTMLCmCheckboxGroupElement, ev: CmCheckboxGroupCustomEvent<HTMLCmCheckboxGroupElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLCmCheckboxGroupElementEventMap>(type: K, listener: (this: HTMLCmCheckboxGroupElement, ev: CmCheckboxGroupCustomEvent<HTMLCmCheckboxGroupElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLCmCheckboxGroupElement: {
+        prototype: HTMLCmCheckboxGroupElement;
+        new (): HTMLCmCheckboxGroupElement;
+    };
+    interface HTMLCmRadioGroupElementEventMap {
+        "valueChange": string[];
+    }
+    interface HTMLCmRadioGroupElement extends Components.CmRadioGroup, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLCmRadioGroupElementEventMap>(type: K, listener: (this: HTMLCmRadioGroupElement, ev: CmRadioGroupCustomEvent<HTMLCmRadioGroupElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLCmRadioGroupElementEventMap>(type: K, listener: (this: HTMLCmRadioGroupElement, ev: CmRadioGroupCustomEvent<HTMLCmRadioGroupElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLCmRadioGroupElement: {
+        prototype: HTMLCmRadioGroupElement;
+        new (): HTMLCmRadioGroupElement;
     };
     interface HTMLCmRichTextElement extends Components.CmRichText, HTMLStencilElement {
     }
@@ -49,6 +103,8 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "cm-assessment": HTMLCmAssessmentElement;
+        "cm-checkbox-group": HTMLCmCheckboxGroupElement;
+        "cm-radio-group": HTMLCmRadioGroupElement;
         "cm-rich-text": HTMLCmRichTextElement;
     }
 }
@@ -75,11 +131,27 @@ declare namespace LocalJSX {
          */
         "slug"?: string;
     }
+    interface CmCheckboxGroup {
+        "label"?: string;
+        "name"?: string;
+        "onValueChange"?: (event: CmCheckboxGroupCustomEvent<string[]>) => void;
+        "options"?: string[];
+        "value"?: string[];
+    }
+    interface CmRadioGroup {
+        "label"?: string;
+        "name"?: string;
+        "onValueChange"?: (event: CmRadioGroupCustomEvent<string[]>) => void;
+        "options"?: string[];
+        "value"?: string[];
+    }
     interface CmRichText {
-        "data"?: TRichText;
+        "content"?: TRichText;
     }
     interface IntrinsicElements {
         "cm-assessment": CmAssessment;
+        "cm-checkbox-group": CmCheckboxGroup;
+        "cm-radio-group": CmRadioGroup;
         "cm-rich-text": CmRichText;
     }
 }
@@ -88,6 +160,8 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "cm-assessment": LocalJSX.CmAssessment & JSXBase.HTMLAttributes<HTMLCmAssessmentElement>;
+            "cm-checkbox-group": LocalJSX.CmCheckboxGroup & JSXBase.HTMLAttributes<HTMLCmCheckboxGroupElement>;
+            "cm-radio-group": LocalJSX.CmRadioGroup & JSXBase.HTMLAttributes<HTMLCmRadioGroupElement>;
             "cm-rich-text": LocalJSX.CmRichText & JSXBase.HTMLAttributes<HTMLCmRichTextElement>;
         }
     }

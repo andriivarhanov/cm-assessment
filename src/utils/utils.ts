@@ -9,5 +9,17 @@ export const tagByNodeType = {
   'heading-4': 'h4',
   'heading-5': 'h5',
   'heading-6': 'h6',
-  'paragraph': 'p'
-}
+  'paragraph': 'p',
+};
+
+export const slugify = (str?: string): string => {
+  if (!str) {
+    return '';
+  }
+
+  return str
+    .toLowerCase()
+    .trim()
+    .replace(/[\s\W-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+};

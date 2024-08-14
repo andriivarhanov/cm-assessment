@@ -5,14 +5,15 @@ import type { TRichText } from '../../types';
 @Component({
   tag: 'cm-rich-text',
   styleUrl: 'cm-rich-text.css',
+  shadow: true,
 })
-export class CmRichText {
-  @Prop() data: TRichText;
+export class CmRichTextComponent {
+  @Prop() content: TRichText;
 
   render() {
     return (
       <div>
-        {this.data?.map((item) => {
+        {this.content?.map((item) => {
           return (
             <div>
               {item.content?.map((content) => {
