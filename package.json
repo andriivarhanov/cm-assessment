@@ -13,9 +13,9 @@
       "import": "./dist/cm-assessment/cm-assessment.esm.js",
       "require": "./dist/cm-assessment/cm-assessment.cjs.js"
     },
-    "./my-component": {
-      "import": "./dist/components/my-component.js",
-      "types": "./dist/components/my-component.d.ts"
+    "./cm-assessment": {
+      "import": "./dist/components/cm-assessment.js",
+      "types": "./dist/components/cm-assessment.d.ts"
     },
     "./loader": {
       "import": "./loader/index.js",

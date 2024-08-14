@@ -5,57 +5,61 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { TQuestions } from "./types";
+export { TQuestions } from "./types";
 export namespace Components {
-    interface MyComponent {
+    interface CmAssessment {
+        "intro": string;
         /**
-          * The first name
+          * The name of the assessment
          */
-        "first": string;
+        "name": string;
         /**
-          * The last name
+          * Data containing the assessment questions
          */
-        "last": string;
+        "questions": TQuestions;
         /**
-          * The middle name
+          * A URL-friendly identifier for the assessment
          */
-        "middle": string;
+        "slug": string;
     }
 }
 declare global {
-    interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
+    interface HTMLCmAssessmentElement extends Components.CmAssessment, HTMLStencilElement {
     }
-    var HTMLMyComponentElement: {
-        prototype: HTMLMyComponentElement;
-        new (): HTMLMyComponentElement;
+    var HTMLCmAssessmentElement: {
+        prototype: HTMLCmAssessmentElement;
+        new (): HTMLCmAssessmentElement;
     };
     interface HTMLElementTagNameMap {
-        "my-component": HTMLMyComponentElement;
+        "cm-assessment": HTMLCmAssessmentElement;
     }
 }
 declare namespace LocalJSX {
-    interface MyComponent {
+    interface CmAssessment {
+        "intro"?: string;
         /**
-          * The first name
+          * The name of the assessment
          */
-        "first"?: string;
+        "name"?: string;
         /**
-          * The last name
+          * Data containing the assessment questions
          */
-        "last"?: string;
+        "questions"?: TQuestions;
         /**
-          * The middle name
+          * A URL-friendly identifier for the assessment
          */
-        "middle"?: string;
+        "slug"?: string;
     }
     interface IntrinsicElements {
-        "my-component": MyComponent;
+        "cm-assessment": CmAssessment;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
+            "cm-assessment": LocalJSX.CmAssessment & JSXBase.HTMLAttributes<HTMLCmAssessmentElement>;
         }
     }
 }
