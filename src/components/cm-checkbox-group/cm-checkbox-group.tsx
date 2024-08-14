@@ -1,4 +1,4 @@
-import { Component, Prop, AttachInternals, h, Event, EventEmitter } from '@stencil/core';
+import { Component, Prop, AttachInternals, State, h, Event, EventEmitter } from '@stencil/core';
 import { slugify } from '../../utils/utils';
 
 @Component({
@@ -14,10 +14,19 @@ export class CmCheckboxGroup {
   @Prop() label: string;
   @Prop() options: string[];
   @Event() valueChange: EventEmitter<string[]>;
+  @State() internalValue: string[] = [];
+
+  connectedCallback() {
+    this.internalValue = this.value || [];
+  }
 
   handleValueChange(event) {
-    const value = event.target.value;
-    this.valueChange.emit([value]);
+    const eventValue = event.target.value;
+    this.internalValue = this.internalValue.includes(eventValue)
+      ? this.internalValue.filter(item => item !== eventValue)
+      : [...this.internalValue, eventValue];
+
+    this.valueChange.emit(Boolean(this.internalValue.length) ? this.internalValue : null);
   }
 
   render() {
@@ -30,7 +39,14 @@ export class CmCheckboxGroup {
 
           return (
             <div>
-              <input type="checkbox" id={id} name={this.name} value={item} onChange={event => this.handleValueChange(event)} checked={(this.value || [])?.includes(item)} />
+              <input
+                type="checkbox"
+                id={id}
+                name={this.name}
+                value={item}
+                onChange={event => this.handleValueChange(event)}
+                checked={(this.internalValue || [])?.includes(item)}
+              />
               <label htmlFor={id}>{item}</label>
             </div>
           );

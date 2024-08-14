@@ -30,7 +30,14 @@ export class CmRadioGroup {
 
           return (
             <div>
-              <input type="radio" id={id} name={this.name} value={item} onChange={event => this.handleValueChange(event)} checked={(this.value || [])?.includes(item)}/>
+              <input
+                type="radio"
+                id={id}
+                name={this.name}
+                value={item}
+                onChange={event => this.handleValueChange(event)}
+                checked={(this.value || [])?.includes(item)}
+              />
               <label htmlFor={id}>{item}</label>
             </div>
           );

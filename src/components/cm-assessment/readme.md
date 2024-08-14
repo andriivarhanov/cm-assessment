@@ -21,11 +21,15 @@
 ### Depends on
 
 - [cm-rich-text](../cm-rich-text)
+- [cm-radio-group](../cm-radio-group)
+- [cm-checkbox-group](../cm-checkbox-group)
 
 ### Graph
 ```mermaid
 graph TD;
   cm-assessment --> cm-rich-text
+  cm-assessment --> cm-radio-group
+  cm-assessment --> cm-checkbox-group
   style cm-assessment fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

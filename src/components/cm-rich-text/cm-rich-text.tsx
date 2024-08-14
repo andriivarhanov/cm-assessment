@@ -13,20 +13,20 @@ export class CmRichTextComponent {
   render() {
     return (
       <div>
-        {this.content?.map((item) => {
+        {this.content?.map(item => {
           return (
             <div>
-              {item.content?.map((content) => {
-                const Tag = tagByNodeType[item.nodeType];
+              {item.content
+                ?.map(content => {
+                  const Tag = tagByNodeType[item.nodeType];
 
-                if (!Tag) {
-                  return null;
-                }
+                  if (!Tag) {
+                    return null;
+                  }
 
-                return (
-                  <Tag>{content.value}</Tag>
-                );
-              }).filter(Boolean)}
+                  return <Tag>{content.value}</Tag>;
+                })
+                .filter(Boolean)}
             </div>
           );
         })}
