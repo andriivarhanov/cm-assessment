@@ -1,5 +1,5 @@
 import { Component, Prop, State, h } from '@stencil/core';
-import type { TQuestions } from '../../types';
+import type { TQuestions, TRichText } from '../../types';
 
 @Component({
   tag: 'cm-assessment',
@@ -22,9 +22,17 @@ export class CmAssessmentComponent {
    */
   @Prop() questions: TQuestions;
 
-  @Prop() intro: string
+  /**
+   * Rich text introduction to the assessment
+   */
+  @Prop() intro: TRichText;
 
-  @State() activePage: number = 1;
+  /**
+   * Rich text introduction for the results page
+   */
+  @Prop() resultsIntro: TRichText;
+
+  @State() activePage: number = 0;
 
   private goToNextPage() {
     this.activePage++;
@@ -35,19 +43,27 @@ export class CmAssessmentComponent {
   }
 
   render() {
+    const isFirstPage = this.activePage === 0;
+    const isLastPage = Boolean(this.questions?.pages?.length) && this.activePage > this.questions.pages.length;
+
     return (
       <div>
-        <h1>{this.name}</h1>
-        <div>{this.slug}</div>
-        <div>{this.activePage}</div>
-        {this.activePage !== 1 && (
+        {isFirstPage && (
+          <cm-rich-text data={this.intro}></cm-rich-text>
+        )}
+        {isLastPage && (
+          <cm-rich-text data={this.resultsIntro}></cm-rich-text>
+        )}
+        {this.activePage !== 0 && (
           <button type="button" onClick={() => {
             this.goToPreviousPage();
           }}>Back</button>
         )}
-        <button type="button" onClick={() => {
-          this.goToNextPage();
-        }}>Next</button>
+        {!isLastPage && (
+          <button type="button" onClick={() => {
+            this.goToNextPage();
+          }}>Next</button>
+        )}
       </div>
     );
   }

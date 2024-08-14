@@ -5,11 +5,14 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { TQuestions } from "./types";
-export { TQuestions } from "./types";
+import { TQuestions, TRichText } from "./types";
+export { TQuestions, TRichText } from "./types";
 export namespace Components {
     interface CmAssessment {
-        "intro": string;
+        /**
+          * Rich text introduction to the assessment
+         */
+        "intro": TRichText;
         /**
           * The name of the assessment
          */
@@ -19,9 +22,16 @@ export namespace Components {
          */
         "questions": TQuestions;
         /**
+          * Rich text introduction for the results page
+         */
+        "resultsIntro": TRichText;
+        /**
           * A URL-friendly identifier for the assessment
          */
         "slug": string;
+    }
+    interface CmRichText {
+        "data": TRichText;
     }
 }
 declare global {
@@ -31,13 +41,23 @@ declare global {
         prototype: HTMLCmAssessmentElement;
         new (): HTMLCmAssessmentElement;
     };
+    interface HTMLCmRichTextElement extends Components.CmRichText, HTMLStencilElement {
+    }
+    var HTMLCmRichTextElement: {
+        prototype: HTMLCmRichTextElement;
+        new (): HTMLCmRichTextElement;
+    };
     interface HTMLElementTagNameMap {
         "cm-assessment": HTMLCmAssessmentElement;
+        "cm-rich-text": HTMLCmRichTextElement;
     }
 }
 declare namespace LocalJSX {
     interface CmAssessment {
-        "intro"?: string;
+        /**
+          * Rich text introduction to the assessment
+         */
+        "intro"?: TRichText;
         /**
           * The name of the assessment
          */
@@ -47,12 +67,20 @@ declare namespace LocalJSX {
          */
         "questions"?: TQuestions;
         /**
+          * Rich text introduction for the results page
+         */
+        "resultsIntro"?: TRichText;
+        /**
           * A URL-friendly identifier for the assessment
          */
         "slug"?: string;
     }
+    interface CmRichText {
+        "data"?: TRichText;
+    }
     interface IntrinsicElements {
         "cm-assessment": CmAssessment;
+        "cm-rich-text": CmRichText;
     }
 }
 export { LocalJSX as JSX };
@@ -60,6 +88,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "cm-assessment": LocalJSX.CmAssessment & JSXBase.HTMLAttributes<HTMLCmAssessmentElement>;
+            "cm-rich-text": LocalJSX.CmRichText & JSXBase.HTMLAttributes<HTMLCmRichTextElement>;
         }
     }
 }
