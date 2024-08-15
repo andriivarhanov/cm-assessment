@@ -72,12 +72,7 @@ export class CmAssessmentComponent {
       return true
     }
 
-    return pageFields.reduce((acc, field) => {
-      acc = this.errors[field]
-      if (acc) {
-        return false
-      }
-    }, false)
+    return pageFields.every(field => !this.errors[field]);
   }
 
   private goToNextPage() {
@@ -154,6 +149,7 @@ export class CmAssessmentComponent {
                     </div>
                   )}
                   {item.type === 'boolean' && (
+                    <div>
                     <cm-radio-group
                       options={[item.labelTrue, item.labelFalse]}
                       label={item.title}
@@ -163,6 +159,21 @@ export class CmAssessmentComponent {
                         this.setAnswers(item.name, event.detail);
                       }}
                     ></cm-radio-group>
+                    {this.errors[item.name] && this.showErrors && <p>Required</p>}
+                    </div>
+                  )}
+                  {item.type === 'text' && (
+                    <div>
+                      <cm-input
+                        label={item.title}
+                        name={item.name}
+                        value={this.answers[item.name]}
+                        onValueChange={event => {
+                          this.setAnswers(item.name, event.detail);
+                        }}
+                      ></cm-input>
+                      {this.errors[item.name] && this.showErrors && <p>Required</p>}
+                    </div>
                   )}
                 </div>
               );
