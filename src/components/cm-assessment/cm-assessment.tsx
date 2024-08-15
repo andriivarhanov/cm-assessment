@@ -105,9 +105,9 @@ export class CmAssessmentComponent {
 
     return (
       <div>
-        {isFirstPage && <cm-rich-text content={this.intro}></cm-rich-text>}
-        {isLastPage && <cm-rich-text content={this.resultsIntro}></cm-rich-text>}
-        {isQuestionPage && (
+        {isFirstPage && this.intro && <cm-rich-text content={this.intro}></cm-rich-text>}
+        {isLastPage && this.resultsIntro && <cm-rich-text content={this.resultsIntro}></cm-rich-text>}
+        {isQuestionPage && this.questions && (
           <div>
             {this.name && <h2>{this.name}</h2>}
             <form>
@@ -185,7 +185,7 @@ export class CmAssessmentComponent {
             Back
           </button>
         )}
-        {!isLastPage && (
+        {!isLastPage && this.intro && (
           <button
             type="button"
             onClick={() => {
