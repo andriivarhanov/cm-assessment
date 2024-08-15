@@ -51,6 +51,10 @@ export namespace Components {
         "content": TRichText;
     }
 }
+export interface CmAssessmentCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLCmAssessmentElement;
+}
 export interface CmCheckboxGroupCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLCmCheckboxGroupElement;
@@ -64,7 +68,18 @@ export interface CmRadioGroupCustomEvent<T> extends CustomEvent<T> {
     target: HTMLCmRadioGroupElement;
 }
 declare global {
+    interface HTMLCmAssessmentElementEventMap {
+        "assessmentCompleted": Record<string, string[]>;
+    }
     interface HTMLCmAssessmentElement extends Components.CmAssessment, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLCmAssessmentElementEventMap>(type: K, listener: (this: HTMLCmAssessmentElement, ev: CmAssessmentCustomEvent<HTMLCmAssessmentElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLCmAssessmentElementEventMap>(type: K, listener: (this: HTMLCmAssessmentElement, ev: CmAssessmentCustomEvent<HTMLCmAssessmentElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLCmAssessmentElement: {
         prototype: HTMLCmAssessmentElement;
@@ -145,6 +160,7 @@ declare namespace LocalJSX {
           * The name of the assessment
          */
         "name"?: string;
+        "onAssessmentCompleted"?: (event: CmAssessmentCustomEvent<Record<string, string[]>>) => void;
         /**
           * Data containing the assessment questions
          */

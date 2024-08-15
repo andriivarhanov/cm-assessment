@@ -1,5 +1,6 @@
-import { Component, Prop, State, Watch, h } from '@stencil/core';
+import { Component, Prop, State, Watch, h, EventEmitter, Event } from '@stencil/core';
 import type { TQuestions, TRichText } from '../../types';
+import { mapPagesToObj } from '../../utils/utils';
 
 @Component({
   tag: 'cm-assessment',
@@ -40,25 +41,12 @@ export class CmAssessmentComponent {
 
   @State() showErrors: boolean = false;
 
+  @Event() assessmentCompleted: EventEmitter<Record<string, string[]>>;
+
   @Watch('questions')
   normalizeDataOnLoad() {
-    console.log('normalizeDataOnLoad')
-    this.answers =
-      this.questions?.pages.reduce((acc, page) => {
-        page.elements.forEach(item => {
-          acc[item.name] = null;
-        });
-
-        return acc;
-      }, {}) || {};
-    this.errors =
-      this.questions?.pages.reduce((acc, page) => {
-        page.elements.forEach(item => {
-          acc[item.name] = true;
-        });
-
-        return acc;
-      }, {}) || {};
+    this.answers = mapPagesToObj(this.questions?.pages, null);
+    this.errors = mapPagesToObj(this.questions?.pages, true);
   }
 
   connectedCallback() {
@@ -66,10 +54,10 @@ export class CmAssessmentComponent {
   }
 
   private validatePage(page: number) {
-    const pageFields = this.questions?.pages?.[page - 1]?.elements?.map(item => item.name)
+    const pageFields = this.questions?.pages?.[page - 1]?.elements?.map(item => item.name);
 
     if (!pageFields) {
-      return true
+      return true;
     }
 
     return pageFields.every(field => !this.errors[field]);
@@ -81,7 +69,7 @@ export class CmAssessmentComponent {
     if (isValidPage) {
       this.showErrors = false;
       this.activePage++;
-      return
+      return;
     }
 
     this.showErrors = true;
@@ -91,11 +79,11 @@ export class CmAssessmentComponent {
     this.activePage--;
   }
 
-  private setAnswers(name, value) {
+  private setAnswers(name: string, value: string[] | null) {
     const answers = {
       ...this.answers,
-      [name]: value
-    }
+      [name]: value,
+    };
     this.answers = answers;
 
     const errors = {
@@ -103,6 +91,10 @@ export class CmAssessmentComponent {
       [name]: !value,
     };
     this.errors = errors;
+  }
+
+  handleSubmit() {
+    this.assessmentCompleted.emit(this.answers);
   }
 
   render() {
@@ -116,69 +108,72 @@ export class CmAssessmentComponent {
         {isFirstPage && <cm-rich-text content={this.intro}></cm-rich-text>}
         {isLastPage && <cm-rich-text content={this.resultsIntro}></cm-rich-text>}
         {isQuestionPage && (
-          <form>
-            {currentPage.elements.map(item => {
-              return (
-                <div>
-                  {item.type === 'radiogroup' && (
-                    <div>
-                      <cm-radio-group
-                        options={item.choices}
-                        label={item.title}
-                        name={item.name}
-                        value={this.answers[item.name]}
-                        onValueChange={event => {
-                          this.setAnswers(item.name, event.detail);
-                        }}
-                      ></cm-radio-group>
-                      {this.errors[item.name] && this.showErrors && <p>Required</p>}
-                    </div>
-                  )}
-                  {item.type === 'checkbox' && (
-                    <div>
-                      <cm-checkbox-group
-                        options={item.choices}
-                        label={item.title}
-                        name={item.name}
-                        value={this.answers[item.name]}
-                        onValueChange={event => {
-                          this.setAnswers(item.name, event.detail);
-                        }}
-                      ></cm-checkbox-group>
-                      {this.errors[item.name] && this.showErrors && <p>Required</p>}
-                    </div>
-                  )}
-                  {item.type === 'boolean' && (
-                    <div>
-                    <cm-radio-group
-                      options={[item.labelTrue, item.labelFalse]}
-                      label={item.title}
-                      name={item.name}
-                      value={this.answers[item.name]}
-                      onValueChange={event => {
-                        this.setAnswers(item.name, event.detail);
-                      }}
-                    ></cm-radio-group>
-                    {this.errors[item.name] && this.showErrors && <p>Required</p>}
-                    </div>
-                  )}
-                  {item.type === 'text' && (
-                    <div>
-                      <cm-input
-                        label={item.title}
-                        name={item.name}
-                        value={this.answers[item.name]}
-                        onValueChange={event => {
-                          this.setAnswers(item.name, event.detail);
-                        }}
-                      ></cm-input>
-                      {this.errors[item.name] && this.showErrors && <p>Required</p>}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </form>
+          <div>
+            {this.name && <h2>{this.name}</h2>}
+            <form>
+              {currentPage.elements.map(item => {
+                return (
+                  <div class="mb-2">
+                    {item.type === 'radiogroup' && (
+                      <div class="mb-2">
+                        <cm-radio-group
+                          options={item.choices}
+                          label={item.title}
+                          name={item.name}
+                          value={this.answers[item.name]}
+                          onValueChange={event => {
+                            this.setAnswers(item.name, event.detail);
+                          }}
+                        ></cm-radio-group>
+                        {this.errors[item.name] && this.showErrors && <p class="color-danger text-small">Required</p>}
+                      </div>
+                    )}
+                    {item.type === 'checkbox' && (
+                      <div class="mb-2">
+                        <cm-checkbox-group
+                          options={item.choices}
+                          label={item.title}
+                          name={item.name}
+                          value={this.answers[item.name]}
+                          onValueChange={event => {
+                            this.setAnswers(item.name, event.detail);
+                          }}
+                        ></cm-checkbox-group>
+                        {this.errors[item.name] && this.showErrors && <p class="color-danger text-small">Required</p>}
+                      </div>
+                    )}
+                    {item.type === 'boolean' && (
+                      <div class="mb-2">
+                        <cm-radio-group
+                          options={[item.labelTrue, item.labelFalse]}
+                          label={item.title}
+                          name={item.name}
+                          value={this.answers[item.name]}
+                          onValueChange={event => {
+                            this.setAnswers(item.name, event.detail);
+                          }}
+                        ></cm-radio-group>
+                        {this.errors[item.name] && this.showErrors && <p class="color-danger text-small">Required</p>}
+                      </div>
+                    )}
+                    {item.type === 'text' && (
+                      <div class="mb-2">
+                        <cm-input
+                          label={item.title}
+                          name={item.name}
+                          value={this.answers[item.name]}
+                          onValueChange={event => {
+                            this.setAnswers(item.name, event.detail);
+                          }}
+                        ></cm-input>
+                        {this.errors[item.name] && this.showErrors && <p class="color-danger text-small">Required</p>}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </form>
+          </div>
         )}
         {isQuestionPage && (
           <button
@@ -198,6 +193,16 @@ export class CmAssessmentComponent {
             }}
           >
             Next
+          </button>
+        )}
+        {isLastPage && (
+          <button
+            type="button"
+            onClick={() => {
+              this.handleSubmit();
+            }}
+          >
+            Submit
           </button>
         )}
       </div>

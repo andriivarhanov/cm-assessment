@@ -1,6 +1,4 @@
-export function format(first?: string, middle?: string, last?: string): string {
-  return (first || '') + (middle ? ` ${middle}` : '') + (last ? ` ${last}` : '');
-}
+import type { TPage } from '../types';
 
 export const tagByNodeType = {
   'heading-1': 'h1',
@@ -22,4 +20,16 @@ export const slugify = (str?: string): string => {
     .trim()
     .replace(/[\s\W-]+/g, '-')
     .replace(/^-+|-+$/g, '');
+};
+
+export const mapPagesToObj = (pages: TPage[], value: any): Record<string, any> => {
+  return (
+    pages?.reduce((acc, page) => {
+      page.elements.forEach(item => {
+        acc[item.name] = value;
+      });
+
+      return acc;
+    }, {}) || {}
+  );
 };
